@@ -3,52 +3,45 @@ import './Add.css';
 import { assets, url } from '../assets/assets';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { StoreContext } from '../../../Context/StoreContext'; // Import StoreContext
-
 
 const Add = () => {
-    const { uid } = useContext(StoreContext);
-    const { college } = useContext(StoreContext);
     const [images, setImages] = useState([]);
     const [data, setData] = useState({
         name: "",
         description: "",
         price: "",
         category: "All",
-        seller: uid,
+        college: "NIT Allahabad",
     });
-    console.log("uid" ,uid,college);
-
-
-
 
     const onSubmitHandler = async (event) => {
         event.preventDefault();
-    
+
         if (images.length === 0) {
             toast.error('No images selected');
             return;
         }
-    
+
         const formData = new FormData();
         formData.append("name", data.name);
         formData.append("description", data.description);
         formData.append("price", Number(data.price));
         formData.append("category", data.category);
-        formData.append("college", college);
-        formData.append("seller", uid);
+        formData.append("college", data.college); 
         images.forEach((image) => {
             formData.append("images", image); // Use "images" as the key
         });
-        
-    
+
         try {
+            const token = localStorage.getItem('token'); // Retrieve the token from local storage
+            console.log("formData", formData);
             const response = await axios.post(`${url}/api/food/add`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}` // Add the token to the headers
                 }
             });
-    
+
             if (response.data.success) {
                 toast.success(response.data.message);
                 setData({
@@ -56,7 +49,7 @@ const Add = () => {
                     description: "",
                     price: "",
                     category: data.category,
-                    seller: uid,
+                    college: data.college,
                 });
                 setImages([]);
             } else {
@@ -67,7 +60,6 @@ const Add = () => {
             toast.error('Error uploading images');
         }
     };
-    
 
     const onChangeHandler = (event) => {
         const { name, value } = event.target;
@@ -137,13 +129,24 @@ const Add = () => {
                 <div className='add-category-price'>
                     <div className='add-category flex-col'>
                         <p>Product category</p>
-                        <select name='category' onChange={onChangeHandler}>
+                        <select name='category' onChange={onChangeHandler} value={data.category}>
                             <option value="ALL">ALL</option>
                             <option value="Cycle">Cycle</option>
                             <option value="Mobile">Mobile</option>
                             <option value="Gadgets">Gadgets</option>
                             <option value="Books">Books</option>
                             <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div className='add-category flex-col'>
+                        <p>Select College</p>
+                        <select name='college' onChange={onChangeHandler} value={data.college}>
+                            <option value="NIT Allahabad">NIT Allahabad</option>
+                            <option value="IIT Kanpur">IIT Kanpur</option>
+                            <option value="IIIT Allahabad">IIIT Allahabad</option>
+                            <option value="NIT Bhopal">NIT Bhopal</option>
+                            <option value="IIT Delhi">IIT Delhi</option>
+                            <option value="IIT Bombay">IIT Bombay</option>
                         </select>
                     </div>
                     <div className='add-price flex-col'>

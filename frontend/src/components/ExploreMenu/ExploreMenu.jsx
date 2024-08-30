@@ -8,7 +8,7 @@ const ExploreMenu = ({ college, setCollege }) => {
   return (
     <div className='explore-menu' id='explore-menu'>
       <h1>Explore our menu</h1>
-      <p className='explore-menu-text'>Choose from a diverse menu featuring a delectable array of dishes. Our mission is to satisfy your cravings and elevate your dining experience, one delicious meal at a time.</p>
+      <p className='explore-menu-text'>Explore a diverse selection of pre-loved items from your university community. Our mission is to help you find what you need, from textbooks to tech gadgets, while giving new life to gently used treasures. Elevate your campus experience by making sustainable choices, one great deal at a time.</p>
       <div className="explore-menu-list">
         {menu_list.map((item, index) => (
           <div 

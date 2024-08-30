@@ -50,7 +50,7 @@ const StoreContextProvider = (props) => {
     } 
     
     const fetchFoodList = async () => {
-        const response = await axios.get(url + "/api/food/list");
+        const response = await axios.get(url + "/api/food/listAll");
         setFoodList(response.data.data)
     }
 
@@ -69,10 +69,7 @@ const StoreContextProvider = (props) => {
         }
         loadData()
     }, [])
-    // useEffect(() => {
-    //     // Debugging setUid usage
-    //     // console.log("uid state has been updated:", uid);
-    // }, [uid]);
+   
 
     const contextValue = {
         url,

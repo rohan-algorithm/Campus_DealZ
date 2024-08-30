@@ -1,12 +1,12 @@
 // FoodDisplay.jsx
 import React, { useContext, useState } from 'react';
-import './FoodDisplay.css';
+import './ItemDisplay.css';
 import FoodItem from '../FoodItem/FoodItem';
 import { StoreContext } from '../../Context/StoreContext';
 import { useNavigate } from 'react-router-dom';
 
 const FoodDisplay = (props) => {
-  console.log(props);
+
   const { food_list } = useContext(StoreContext);
   const [sortOrder, setSortOrder] = useState('asc');
   const navigate = useNavigate();
@@ -60,8 +60,8 @@ const FoodDisplay = (props) => {
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
           >
-            <option value='asc'>Ascending</option>
-            <option value='desc'>Descending</option>
+            <option value='asc'>Low to High</option>
+            <option value='desc'>High to Low</option>
           </select>
         </div>
       </div>
@@ -72,7 +72,7 @@ const FoodDisplay = (props) => {
             return null; // or render some fallback UI
           }
           return (
-            <div key={item._id} onClick={() => handleItemClick(item._id)}>
+            <div  key={item._id} onClick={() => handleItemClick(item._id) }>
               <FoodItem
                 image={item.images[0]}
                 name={item.name}

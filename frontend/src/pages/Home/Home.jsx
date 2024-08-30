@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Header from '../../components/Header/Header';
 import ExploreMenu from '../../components/ExploreMenu/ExploreMenu';
-import FoodDisplay from '../../components/FoodDisplay/FoodDisplay';
-// import AppDownload from '../../components/AppDownload/AppDownload';
+import ItemDisplay from '../../components/ItemDisplay/ItemDisplay';
 
 const Home = () => {
   const [college, setCollege] = useState('NIT Allahabad');
@@ -12,7 +11,7 @@ const Home = () => {
     <>
       <Header />
       <ExploreMenu  college={college} setCollege={setCollege}/>
-      <FoodDisplay setCollege={setCollege} setCategory={setCategory} category={category} college={college} />
+      <ItemDisplay setCollege={setCollege} setCategory={setCategory} category={category} college={college} />
     </>
   );
 };

@@ -26,7 +26,7 @@ app.use("/api/food", foodRouter)
 app.use("/uploads",express.static('uploads'))
 app.use("/api/cart", cartRouter)
 app.use("/api/order",orderRouter)
-// app.use('/uploads', express.static('uploads'));
+
 
 
 app.get("/", (req, res) => {

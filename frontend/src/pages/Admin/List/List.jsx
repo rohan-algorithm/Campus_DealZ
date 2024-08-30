@@ -7,33 +7,40 @@ import { toast } from 'react-toastify';
 const List = () => {
 
   const [list, setList] = useState([]);
-
+  const token = localStorage.getItem('token');
+  
   const fetchList = async () => {
-    const response = await axios.get(`${url}/api/food/list`)
+    const response = await axios.get(`${url}/api/food/list`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     if (response.data.success) {
       setList(response.data.data);
-    }
-    else {
-      toast.error("Error")
+    } else {
+      toast.error("Error");
     }
   }
 
   const removeFood = async (foodId) => {
     const response = await axios.post(`${url}/api/food/remove`, {
       id: foodId
-    })
+    }, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     await fetchList();
     if (response.data.success) {
       toast.success(response.data.message);
-    }
-    else {
-      toast.error("Error")
+    } else {
+      toast.error("Error");
     }
   }
 
   useEffect(() => {
     fetchList();
-  }, [])
+  }, []);
 
   return (
     <div className='list add flex-col'>

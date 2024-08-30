@@ -15,7 +15,7 @@ const SellerProfileCard = ({ seller }) => {
           <p>{seller.title}</p>
         </div>
      
-        <button className="follow-button">Follow</button>
+
         <p className="seller-description">{seller.college}</p>
         <p className="seller-description">{seller.batch}</p>
 

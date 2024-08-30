@@ -1,18 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams ,useNavigate} from 'react-router-dom';
 import './FoodPage.css';
 import { StoreContext } from '../../Context/StoreContext';
 import FoodItem from '../FoodItem/FoodItem';
 import SellerProfileCard from '../SellerCard/SellerCard';
 import axios from 'axios';
+import Btn from '../CustomBtn/CustomBtn'; 
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const { url } = useContext(StoreContext);
+ const navigate = useNavigate();
+  const { url, addToCart } = useContext(StoreContext);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedSize, setSelectedSize] = useState('');
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [similarItems, setSimilarItems] = useState([]);
   const [seller, setSeller] = useState(null);
@@ -42,6 +43,16 @@ const ProductDetails = () => {
     };
     fetchProduct();
   }, [id, url]);
+  
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    addToCart(id);
+  };
+  const handleBuyNow = (e) => {
+    e.stopPropagation();
+    addToCart(id);
+    navigate('/cart');
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
@@ -70,30 +81,37 @@ const ProductDetails = () => {
 
         <div className="product-info">
           <h1>{product.name}</h1>
-          <div className="price">₹{product.price}</div>
-     
-          <button className="add-to-bag">Add to Bag</button>
-          <button className="buy-now">Buy Now</button>
+          <div className="brutalist-container">
+            <h1 className="brutalist-input smooth-type">₹{product.price}</h1>
+            <label className="brutalist-label">Offer!</label>
+          </div>
+          <div className="btn-container">
+            <div onClick={handleBuyNow}>
+             <Btn text="Buy Now"  />
+            </div>
+          
+            <div onClick={handleAddToCart}>
+              <Btn text="Add to Cart" />
+            </div>
+          </div>
         </div>
       </div>
       <div className="product-info-des">
-
-      <div className="product-description">
-        <h2>Description</h2>
-        <p>{product.description}</p>
+        <div className="card">
+          <p className="card-title">Description</p>
+          <p className="small-desc">{product.description}</p>
+          <div className="go-corner">
+            <div className="go-arrow">→</div>
+          </div>
+        </div>
+        <div>
+          {seller && <SellerProfileCard seller={seller} />}
+        </div>
       </div>
-       <div>
-       {seller && <SellerProfileCard seller={seller} />}
-
-       </div>
-      </div>
-   
-
       <div className="similar-items">
         <h2>Similar Products</h2>
         <div className="similar-items-list">
           {similarItems.map(item => (
-            
             <FoodItem
               key={item._id}
               id={item._id}
@@ -101,7 +119,6 @@ const ProductDetails = () => {
               name={item.name}
               desc={item.description}
               price={item.price}
-              
             />
           ))}
         </div>

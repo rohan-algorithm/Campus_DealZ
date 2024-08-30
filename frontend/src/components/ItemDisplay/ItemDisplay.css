@@ -61,7 +61,7 @@
 /* Fixed size for food item cards */
 .food-display-list {
   display: grid;
-  grid-template-columns: auto auto  ;
+  grid-template-columns: auto auto auto ;
   /* gap: 20px; */
   /* margin-top: 30px; */
   /* row-gap: 30px; */
@@ -112,7 +112,13 @@
       flex-direction: column;
       align-items: flex-start;
   }
-
+  .food-display-list {
+    display: grid;
+    grid-template-columns: auto  ;
+    /* margin-top: 30px; */
+    /* row-gap: 30px; */
+  }
+  
   .sort-controls {
       margin-top: 10px;
   }

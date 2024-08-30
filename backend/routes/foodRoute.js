@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { addFood, fetchSimilarProducts, getItemById, listFood, removeFood } from '../controllers/foodController.js';
+import { listFoodAll,addFood, fetchSimilarProducts, getItemById, listFood, removeFood } from '../controllers/foodController.js';
 
 const foodRouter = express.Router();
 
@@ -16,6 +16,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 foodRouter.get("/list", listFood);
+foodRouter.get("/listAll", listFoodAll);
+
 foodRouter.post("/add", upload.array('images', 5), addFood); // 'images' should match your form field name
 foodRouter.post("/remove", removeFood);
 foodRouter.get("/:id", getItemById);

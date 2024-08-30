@@ -1,10 +1,10 @@
 import foodModel from "../models/foodModel.js";
 import fs from 'fs';
-
-const listFood = async (req, res) => {
+import jwt from 'jsonwebtoken';
+//
+const listFoodAll = async (req, res) => {
     try {
         // Extract filters from the request body
-        console.log(req.body);  
         const { college, category } = req.body;
       
         // Build query object
@@ -28,20 +28,54 @@ const listFood = async (req, res) => {
     }
 };
 
+const listFood = async (req, res) => {
+
+    try {
+        // Extract token from headers
+        const token = req.headers.authorization.split(' ')[1];
+        
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+        // Fetch orders by user ID
+        const orders = await foodModel.find({ seller: decoded.id });
+        // console.log(orders);
+        res.json({ success: true, data: orders });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+};
+
 // Add food
 
 
- const addFood = async (req, res) => {
-    const { name, description, price, category, college, seller } = req.body;
-    console.log(req.body);
-    if (!name || !description || !price || !category || !college || !seller) {
-        return res.status(400).json({ success: false, message: "All fields are required" });
+
+const addFood = async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ success: false, message: "No token provided" });
     }
 
+    let userId;
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log(decoded);
+        userId = decoded.id;
+        console.log(userId);
+
+    } catch (error) {
+        return res.status(401).json({ success: false, message: "Invalid token" });
+    }
+
+    const { name, description, price, category, college } = req.body;
+    
+    if (!name || !description || !price || !category || !college || !userId) {
+        return res.status(400).json({ success: false, message: "All fields are required" });
+    }
+    
     try {
         // Access uploaded files via req.files
         const images = req.files.map(file => file.path); // Paths to the uploaded files
-       console.log(images);
+        console.log(images);
         const newFood = new foodModel({
             name,
             description,
@@ -49,16 +83,18 @@ const listFood = async (req, res) => {
             images, // Array of file paths
             category,
             college,
-            seller
+            seller: userId
         });
-
+       
         const savedFood = await newFood.save();
+        console.log(savedFood);
         res.json({ success: true, data: savedFood });
     } catch (error) {
         console.error('Error adding food:', error);
         res.status(500).json({ success: false, message: "Error adding food" });
     }
 };
+
 
 // Delete food
 const removeFood = async (req, res) => {
@@ -124,4 +160,4 @@ const fetchSimilarProducts = async (req, res) => {
       res.status(500).json({ success: false, message: 'Server error' });
     }
   };
-export { listFood, addFood, removeFood,fetchByCollege ,getItemById,fetchSimilarProducts};
+export { listFood, addFood, removeFood,fetchByCollege ,getItemById,fetchSimilarProducts,listFoodAll};
